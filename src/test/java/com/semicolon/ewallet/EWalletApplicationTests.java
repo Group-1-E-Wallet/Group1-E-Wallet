@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EWalletApplicationTests {
+class EWalletApplicationTests{
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads( ){
+    }
 
 }
