@@ -59,7 +59,12 @@ public class UserServiceImpl implements UserService {
                 findUserByPassword(
                         changePasswordRequest.getPassword()).isPresent();
 
-        if (passwordExists) {
+        boolean emailExists = userRepository.
+                findByEmailAddressIgnoreCase(
+                        changePasswordRequest.getEmailAddress()).
+                isPresent();
+
+        if (passwordExists && emailExists) {
             User user = userRepository.
                     findUserById(changePasswordRequest.getId());
             user.setPassword(changePasswordRequest.getNewPassword());
