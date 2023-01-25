@@ -1,5 +1,7 @@
 package com.semicolon.ewallet.user;
 
+import com.semicolon.ewallet.Exception.RegistrationException;
+import com.semicolon.ewallet.user.dto.LoginRequest;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.token.Token;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -117,6 +120,23 @@ public class UserServiceImpl implements UserService{
         );
 
         return token;
+    }
+
+    public String login(LoginRequest loginRequest){
+        var validEmail = userRepository.findByEmailIgnoreCase(loginRequest.getEmail());
+        if (Objects.isNull(validEmail)) throw new RegistrationException("EMAIL ADDRESS OR PASSWORD DOES NOT MATCH");
+
+       try{
+           if (!validEmail.get().getPassword().equals(loginRequest.getPassword()));
+       } catch (Exception e) {
+           throw new RuntimeException(e);
+       }
+
+      if(validEmail.get().getIsVerified().equals(false)){
+          throw new RegistrationException("Account not yet verified");
+        }
+       return "Login Successful";
+
     }
 
 

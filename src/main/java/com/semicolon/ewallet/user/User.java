@@ -2,6 +2,8 @@ package com.semicolon.ewallet.user;
 
 import com.semicolon.ewallet.user.card.Card;
 import lombok.Data;
+import lombok.Generated;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,11 +11,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class User{
     @Id
+    @Generated
     private String id;
 
     private String firstName;
     private String lastName;
     private String  password;
+    private Boolean isVerified;
     private String email;
     private String nin;
     private String address;
