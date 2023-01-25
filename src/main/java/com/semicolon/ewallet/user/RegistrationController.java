@@ -4,6 +4,7 @@ import com.semicolon.ewallet.Exception.ApiResponse;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,16 @@ import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping("api/v1/user")
-public class Controller{
+@Slf4j
+public class RegistrationController {
 
     @Autowired
     UserService userService;
 
     @PostMapping("signup")
-    public ResponseEntity<?> signUP(SignUpRequest signUpRequest,HttpServletRequest httpServletRequest) throws MessagingException{
+    public ResponseEntity<?> signUP(@RequestBody SignUpRequest signUpRequest, HttpServletRequest httpServletRequest) throws MessagingException{
+
+
         ApiResponse apiResponse=ApiResponse.builder()
                     .status(HttpStatus.OK.value())
                     .data(userService.register(signUpRequest))

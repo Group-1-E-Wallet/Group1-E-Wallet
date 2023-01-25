@@ -1,6 +1,7 @@
 package com.semicolon.ewallet.user;
-
+import com.semicolon.ewallet.Exception.RegistrationException;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
+import com.semicolon.ewallet.user.dto.SignUpResponse;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.token.Token;
 import jakarta.mail.MessagingException;
@@ -20,22 +21,29 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
 
     @Override
-    public String register(SignUpRequest signUpRequest) throws MessagingException{
+    public SignUpResponse register(SignUpRequest signUpRequest) throws MessagingException{
         boolean emailExists=userRepository
-                .findByEmailIgnoreCase(signUpRequest.getEmail())
+                .findByEmailAddressIgnoreCase(signUpRequest.getEmailAddress())
                 .isPresent();
-        if(emailExists)throw new IllegalStateException("Email Address already exists");
+        if(emailExists)throw new RegistrationException("Email Address already exists");
         User user = new User(
                 signUpRequest.getFirstName(),
                 signUpRequest.getLastName(),
-                signUpRequest.getEmail(),
+                signUpRequest.getEmailAddress(),
                 signUpRequest.getPassword()
         );
         userRepository.save(user);
         String token = generateToken(user);
-        emailSender.send(signUpRequest.getEmail(), buildEmail(signUpRequest.getFirstName(), token));
+        emailSender.send(signUpRequest.getEmailAddress(), buildEmail(signUpRequest.getFirstName(), token));
 
-        return token;
+        SignUpResponse sign = new SignUpResponse();
+        sign.setEmail(signUpRequest.getEmailAddress());
+        sign.setFirstName(signUpRequest.getFirstName());
+        sign.setLastName(signUpRequest.getLastName());
+        sign.setToken(token);
+
+
+        return sign;
     }
 
     private String buildEmail(String firstName, String token){
@@ -116,7 +124,7 @@ public class UserServiceImpl implements UserService{
                 user
         );
 
-        return token;
+        return confirmationToken.getToken();
     }
 
 
