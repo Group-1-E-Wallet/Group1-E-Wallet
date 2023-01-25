@@ -1,10 +1,9 @@
 package com.semicolon.ewallet.user;
 
-import com.semicolon.ewallet.user.card.Card;
-import com.semicolon.ewallet.user.token.Token;
+import com.semicolon.ewallet.user.card.Card;;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -27,4 +26,5 @@ public class User {
             this.emailAddress = email;
             this.password = password;
         }
+
 }

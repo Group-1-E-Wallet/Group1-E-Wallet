@@ -27,9 +27,8 @@ public class TokenServiceImpl implements TokenService{
     }
 
     @Override
-    public void deleteExpiredToken( ){
+    public void deleteExpiredToken(){
         tokenRepository.deleteTokenByExpiredAtBefore(LocalDateTime.now());
-
     }
 
     @Override

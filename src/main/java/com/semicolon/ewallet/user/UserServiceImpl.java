@@ -1,11 +1,13 @@
 package com.semicolon.ewallet.user;
-import com.semicolon.ewallet.Exception.RegistrationException;
+
+import com.semicolon.ewallet.user.dto.ChangePasswordRequest;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.SignUpResponse;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.email.EmailService;
 import com.semicolon.ewallet.user.token.Token;
 import com.semicolon.ewallet.user.token.ResendTokenRequest;
+
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,30 +16,37 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 
 @Service
-public class UserServiceImpl implements UserService{
-
+public class UserServiceImpl implements UserService {
     @Autowired
     EmailSender emailSender;
     @Autowired
     UserRepository userRepository;
 
     @Autowired
+
     private EmailService emailService;
+
 
     @Override
     public SignUpResponse register(SignUpRequest signUpRequest) throws MessagingException{
-        boolean emailExists=userRepository
+        boolean emailExists = userRepository
                 .findByEmailAddressIgnoreCase(signUpRequest.getEmailAddress())
                 .isPresent();
-        if(emailExists)throw new RegistrationException("Email Address already exists");
+
+        if(emailExists)
+            throw new IllegalStateException("Email Address already exists");
+
         User user = new User(
                 signUpRequest.getFirstName(),
                 signUpRequest.getLastName(),
                 signUpRequest.getEmailAddress(),
                 signUpRequest.getPassword()
         );
+
         userRepository.save(user);
         String token = generateToken(user);
+        emailSender.send(signUpRequest.getEmailAddress(),
+                buildEmail(signUpRequest.getFirstName(), token));
         emailSender.send(signUpRequest.getEmailAddress(), buildEmail(signUpRequest.getFirstName(), token));
 
         SignUpResponse sign = new SignUpResponse();
@@ -45,9 +54,30 @@ public class UserServiceImpl implements UserService{
         sign.setFirstName(signUpRequest.getFirstName());
         sign.setLastName(signUpRequest.getLastName());
         sign.setToken(token);
-
-
         return sign;
+    }
+
+    @Override
+    public String resetPassword(ChangePasswordRequest changePasswordRequest) {
+        boolean passwordExists = userRepository.
+                findUserByPassword(
+                        changePasswordRequest.getPassword()).isPresent();
+
+        boolean emailExists = userRepository.
+                findByEmailAddressIgnoreCase(
+                        changePasswordRequest.getEmailAddress()).
+                isPresent();
+
+        if (passwordExists && emailExists) {
+            User user = userRepository.
+                    findUserById(changePasswordRequest.getId());
+            user.setPassword(changePasswordRequest.getNewPassword());
+            userRepository.save(user);
+        }
+        else
+            throw new RuntimeException("Invalid details");
+
+        return "New password created";
     }
 
     @Override
@@ -137,7 +167,7 @@ public class UserServiceImpl implements UserService{
                 LocalDateTime.now().plusMinutes(10),
                 user
         );
-
+        tokenService.saveConfirmationToken(confirmationToken);
         return confirmationToken.getToken();
     }
 
