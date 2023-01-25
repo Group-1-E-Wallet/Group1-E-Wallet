@@ -2,13 +2,16 @@ package com.semicolon.ewallet.user;
 
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.email.EmailSender;
+import com.semicolon.ewallet.user.email.EmailService;
 import com.semicolon.ewallet.user.token.Token;
+import com.semicolon.ewallet.user.token.dtos.ResendTokenRequest;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -18,6 +21,9 @@ public class UserServiceImpl implements UserService{
     EmailSender emailSender;
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public String register(SignUpRequest signUpRequest) throws MessagingException{
@@ -36,6 +42,16 @@ public class UserServiceImpl implements UserService{
         emailSender.send(signUpRequest.getEmail(), buildEmail(signUpRequest.getFirstName(), token));
 
         return token;
+    }
+
+    @Override
+    public String resendToken(ResendTokenRequest resendTokenRequest) throws MessagingException {
+        User foundUser = userRepository.findByEmailIgnoreCase(resendTokenRequest.getEmail()).orElseThrow(()->new
+                IllegalStateException("this email does not exist"));
+        SecureRandom random = new SecureRandom();
+        String token = String.valueOf(1000 + random.nextInt(9999));
+        emailService.send(resendTokenRequest.getEmail(), buildEmail(foundUser.getFirstName(), token) );
+        return "token has been resent successfully";
     }
 
     private String buildEmail(String firstName, String token){
@@ -118,6 +134,12 @@ public class UserServiceImpl implements UserService{
 
         return token;
     }
+
+//    public static void main(String[] args) {
+//        Random random = new Random();
+//        String token = String.valueOf(1000 + random.nextInt(9999));
+//        System.out.println(token);
+//    }
 
 
 }
