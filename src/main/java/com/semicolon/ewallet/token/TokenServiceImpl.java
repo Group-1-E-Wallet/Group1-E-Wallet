@@ -1,13 +1,8 @@
-package com.semicolon.ewallet.user.token;
+package com.semicolon.ewallet.token;
 
-import com.semicolon.ewallet.user.User;
-import com.semicolon.ewallet.user.UserRepository;
-import com.semicolon.ewallet.user.email.EmailService;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
 

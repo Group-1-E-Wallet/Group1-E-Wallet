@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.user.card;
+package com.semicolon.ewallet.card;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;

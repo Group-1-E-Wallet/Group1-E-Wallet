@@ -2,7 +2,7 @@ package com.semicolon.ewallet.user;
 
 import com.semicolon.ewallet.Exception.ApiResponse;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
-import com.semicolon.ewallet.user.token.ResendTokenRequest;
+import com.semicolon.ewallet.token.ResendTokenRequest;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

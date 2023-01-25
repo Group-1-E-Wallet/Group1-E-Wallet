@@ -1,6 +1,4 @@
-package com.semicolon.ewallet.user.token;
-
-import jakarta.mail.MessagingException;
+package com.semicolon.ewallet.token;
 
 import java.util.Optional;
 

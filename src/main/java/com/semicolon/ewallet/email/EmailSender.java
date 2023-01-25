@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.user.email;
+package com.semicolon.ewallet.email;
 
 import jakarta.mail.MessagingException;
 

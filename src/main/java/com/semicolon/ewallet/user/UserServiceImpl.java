@@ -1,11 +1,13 @@
 package com.semicolon.ewallet.user;
 import com.semicolon.ewallet.Exception.RegistrationException;
+import com.semicolon.ewallet.user.dto.ChangePasswordRequest;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.SignUpResponse;
-import com.semicolon.ewallet.user.email.EmailSender;
-import com.semicolon.ewallet.user.email.EmailService;
-import com.semicolon.ewallet.user.token.Token;
-import com.semicolon.ewallet.user.token.ResendTokenRequest;
+import com.semicolon.ewallet.email.EmailSender;
+import com.semicolon.ewallet.email.EmailService;
+import com.semicolon.ewallet.token.Token;
+import com.semicolon.ewallet.token.ResendTokenRequest;
+import com.semicolon.ewallet.token.TokenService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private EmailService emailService;
+    @Autowired
+    TokenService tokenService;
 
     @Override
     public SignUpResponse register(SignUpRequest signUpRequest) throws MessagingException{
@@ -52,12 +56,33 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public String resendToken(ResendTokenRequest resendTokenRequest) throws MessagingException {
-        User foundUser = userRepository.findByEmailAddressIgnoreCase(resendTokenRequest.getEmailAddress()).orElseThrow(()->new
+        User foundUser = userRepository.findByEmailAddressIgnoreCase(resendTokenRequest.getEmailAddress())
+                .orElseThrow(()->new
                 IllegalStateException("this email does not exist"));
         SecureRandom random = new SecureRandom();
         String token = String.valueOf(1000 + random.nextInt(9999));
+        Token confirmationToken = new Token(token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(10),
+                foundUser
+        );
+
+        tokenService.saveConfirmationToken(confirmationToken);
         emailService.send(resendTokenRequest.getEmailAddress(), buildEmail(foundUser.getFirstName(), token) );
         return "token has been resent successfully";
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequest changePasswordRequest) throws MessagingException{
+        var foundUser = userRepository.findByEmailAddressIgnoreCase(changePasswordRequest.getEmailAddress());
+        if(foundUser.isEmpty()) throw new IllegalStateException("Email not found");
+        if(!changePasswordRequest.getOldPassword().equals(foundUser.get().getPassword()))
+            throw new IllegalStateException("Incorrect password");
+        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmNewPassword()))
+            throw new IllegalStateException("passwords do not match");
+        foundUser.get().setPassword(changePasswordRequest.getNewPassword());
+        userRepository.save(foundUser.get());
+        return "password changed successfully";
     }
 
     private String buildEmail(String firstName, String token){
@@ -137,6 +162,7 @@ public class UserServiceImpl implements UserService{
                 LocalDateTime.now().plusMinutes(10),
                 user
         );
+        tokenService.saveConfirmationToken(confirmationToken);
 
         return confirmationToken.getToken();
     }
