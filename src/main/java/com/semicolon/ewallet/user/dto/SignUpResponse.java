@@ -6,7 +6,7 @@ import lombok.Data;
 public class SignUpResponse {
     String firstName;
     String lastName;
-    String email;
+    String emailAddress;
     String token;
 
 }

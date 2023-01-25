@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Document
 @Data
-public class Card{
+public class Card {
     private String cardName;
     private String cardNumber;
     private LocalDate expiryDate;

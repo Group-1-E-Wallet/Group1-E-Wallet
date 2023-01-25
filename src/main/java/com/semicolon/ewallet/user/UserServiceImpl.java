@@ -1,19 +1,34 @@
 package com.semicolon.ewallet.user;
+
 import com.semicolon.ewallet.Exception.RegistrationException;
 import com.semicolon.ewallet.user.dto.LoginRequest;
+
+
+
+import com.semicolon.ewallet.user.dto.ChangePasswordRequest;
 
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.SignUpResponse;
 import com.semicolon.ewallet.user.email.EmailSender;
+import com.semicolon.ewallet.user.email.EmailService;
 import com.semicolon.ewallet.user.token.Token;
+
 import com.semicolon.ewallet.user.token.TokenService;
+
+import com.semicolon.ewallet.user.token.ResendTokenRequest;
+
+
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+
 import java.util.Objects;
+
+
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,32 +39,75 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Autowired
+
     TokenService tokenService;
+
+@Autowired
+    private EmailService emailService;
+
+
 
     @Override
     public SignUpResponse register(SignUpRequest signUpRequest) throws MessagingException{
-        boolean emailExists=userRepository
+        boolean emailExists = userRepository
                 .findByEmailAddressIgnoreCase(signUpRequest.getEmailAddress())
                 .isPresent();
-        if(emailExists)throw new RegistrationException("Email Address already exists");
+
+        if(emailExists)
+            throw new IllegalStateException("Email Address already exists");
+
         User user = new User(
                 signUpRequest.getFirstName(),
                 signUpRequest.getLastName(),
                 signUpRequest.getEmailAddress(),
                 signUpRequest.getPassword()
         );
+
         userRepository.save(user);
         String token = generateToken(user);
+        emailSender.send(signUpRequest.getEmailAddress(),
+                buildEmail(signUpRequest.getFirstName(), token));
         emailSender.send(signUpRequest.getEmailAddress(), buildEmail(signUpRequest.getFirstName(), token));
 
         SignUpResponse sign = new SignUpResponse();
-        sign.setEmail(signUpRequest.getEmailAddress());
+        sign.setEmailAddress(signUpRequest.getEmailAddress());
         sign.setFirstName(signUpRequest.getFirstName());
         sign.setLastName(signUpRequest.getLastName());
         sign.setToken(token);
-
-
         return sign;
+    }
+
+    @Override
+    public String resetPassword(ChangePasswordRequest changePasswordRequest) {
+        boolean passwordExists = userRepository.
+                findUserByPassword(
+                        changePasswordRequest.getPassword()).isPresent();
+
+        boolean emailExists = userRepository.
+                findByEmailAddressIgnoreCase(
+                        changePasswordRequest.getEmailAddress()).
+                isPresent();
+
+        if (passwordExists && emailExists) {
+            User user = userRepository.
+                    findUserById(changePasswordRequest.getId());
+            user.setPassword(changePasswordRequest.getNewPassword());
+            userRepository.save(user);
+        }
+        else
+            throw new RuntimeException("Invalid details");
+
+        return "New password created";
+    }
+
+    @Override
+    public String resendToken(ResendTokenRequest resendTokenRequest) throws MessagingException {
+        User foundUser = userRepository.findByEmailAddressIgnoreCase(resendTokenRequest.getEmailAddress()).orElseThrow(()->new
+                IllegalStateException("this email does not exist"));
+        SecureRandom random = new SecureRandom();
+        String token = String.valueOf(1000 + random.nextInt(9999));
+        emailService.send(resendTokenRequest.getEmailAddress(), buildEmail(foundUser.getFirstName(), token) );
+        return "token has been resent successfully";
     }
 
     private String buildEmail(String firstName, String token){
@@ -130,6 +188,7 @@ public class UserServiceImpl implements UserService {
                 user
         );
 
+
         tokenService.saveConfirmationToken(confirmationToken);
 
         return confirmationToken.getToken();
@@ -151,6 +210,7 @@ public class UserServiceImpl implements UserService {
        return "Login Successful";
 
     }
+
 
 
 }
