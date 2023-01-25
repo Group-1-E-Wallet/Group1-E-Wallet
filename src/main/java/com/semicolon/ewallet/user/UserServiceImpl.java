@@ -1,5 +1,6 @@
 package com.semicolon.ewallet.user;
 
+import com.semicolon.ewallet.user.dto.ChangePasswordRequest;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.token.Token;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -21,10 +21,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public String register(SignUpRequest signUpRequest) throws MessagingException{
-        boolean emailExists=userRepository
+        boolean emailExists = userRepository
                 .findByEmailIgnoreCase(signUpRequest.getEmail())
                 .isPresent();
-        if(emailExists)throw new IllegalStateException("Email Address already exists");
+
+        if(emailExists)
+            throw new IllegalStateException("Email Address already exists");
+
         User user = new User(
                 signUpRequest.getFirstName(),
                 signUpRequest.getLastName(),
@@ -33,9 +36,28 @@ public class UserServiceImpl implements UserService{
         );
         userRepository.save(user);
         String token = generateToken(user);
-        emailSender.send(signUpRequest.getEmail(), buildEmail(signUpRequest.getFirstName(), token));
+        emailSender.send(signUpRequest.getEmail(),
+                buildEmail(signUpRequest.getFirstName(), token));
 
         return token;
+    }
+
+    @Override
+    public String resetPassword(ChangePasswordRequest changePasswordRequest) {
+        boolean passwordExists = userRepository.
+                findUserByPassword(
+                        changePasswordRequest.getPassword()).isPresent();
+
+        if (passwordExists) {
+            User user = userRepository.
+                    findUserById(changePasswordRequest.getId());
+            user.setPassword(changePasswordRequest.getNewPassword());
+            userRepository.save(user);
+        }
+        else
+            throw new RuntimeException("Invalid details");
+
+        return "New password created";
     }
 
     private String buildEmail(String firstName, String token){
