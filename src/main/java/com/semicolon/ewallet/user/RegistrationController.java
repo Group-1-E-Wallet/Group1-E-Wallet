@@ -17,14 +17,12 @@ import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping("api/v1/user")
-public class Controller {
+public class RegistrationController {
     @Autowired
     UserService userService;
-
-    @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest,
-                                    HttpServletRequest httpServletRequest)
-            throws MessagingException {
+    @PostMapping("signup")
+    public ResponseEntity<?> signUP(@RequestBody SignUpRequest signUpRequest,
+                                    HttpServletRequest httpServletRequest) throws MessagingException{
         ApiResponse apiResponse=ApiResponse.builder()
                     .status(HttpStatus.OK.value())
                     .data(userService.register(signUpRequest))
@@ -36,7 +34,7 @@ public class Controller {
     }
 
     @PostMapping("/resetpassword")
-    public ResponseEntity<?> signUp(@RequestBody ChangePasswordRequest changePasswordRequest,
+    public ResponseEntity<?> resetPassword(@RequestBody ChangePasswordRequest changePasswordRequest,
                                     HttpServletRequest httpServletRequest){
         ApiResponse apiResponse=ApiResponse.builder()
                 .status(HttpStatus.OK.value())
