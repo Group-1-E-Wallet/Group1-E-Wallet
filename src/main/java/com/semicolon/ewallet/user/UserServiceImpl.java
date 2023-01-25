@@ -1,12 +1,22 @@
 package com.semicolon.ewallet.user;
 
+import com.semicolon.ewallet.Exception.RegistrationException;
+import com.semicolon.ewallet.user.dto.LoginRequest;
+
+
+
 import com.semicolon.ewallet.user.dto.ChangePasswordRequest;
+
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.SignUpResponse;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.email.EmailService;
 import com.semicolon.ewallet.user.token.Token;
+
+import com.semicolon.ewallet.user.token.TokenService;
+
 import com.semicolon.ewallet.user.token.ResendTokenRequest;
+
 
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +25,14 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 
+import java.util.Objects;
+
+
+
+
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     EmailSender emailSender;
     @Autowired
@@ -24,7 +40,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
 
+    TokenService tokenService;
+
+@Autowired
     private EmailService emailService;
+
 
 
     @Override
@@ -167,15 +187,30 @@ public class UserServiceImpl implements UserService {
                 LocalDateTime.now().plusMinutes(10),
                 user
         );
+
+
         tokenService.saveConfirmationToken(confirmationToken);
+
         return confirmationToken.getToken();
     }
 
-//    public static void main(String[] args) {
-//        Random random = new Random();
-//        String token = String.valueOf(1000 + random.nextInt(9999));
-//        System.out.println(token);
-//    }
+    public String login(LoginRequest loginRequest){
+        var validEmail = userRepository.findByEmailAddressIgnoreCase(loginRequest.getEmailAddress());
+        if (Objects.isNull(validEmail)) throw new RegistrationException("EMAIL ADDRESS OR PASSWORD DOES NOT MATCH");
+
+       try{
+           if (!validEmail.get().getPassword().equals(loginRequest.getPassword()));
+       } catch (Exception e) {
+           throw new RuntimeException(e);
+       }
+
+//      if(validEmail.get().getIsVerified().equals(false)){
+//          throw new RegistrationException("Account not yet verified");
+//        }
+       return "Login Successful";
+
+    }
+
 
 
 }

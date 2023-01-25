@@ -1,9 +1,11 @@
 package com.semicolon.ewallet.user;
 
+
 import com.semicolon.ewallet.exception.ApiResponse;
 import com.semicolon.ewallet.user.dto.ChangePasswordRequest;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.token.ResendTokenRequest;
+
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ public class RegistrationController {
     @Autowired
     UserService userService;
     @PostMapping("/signup")
+
     public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest, HttpServletRequest httpServletRequest) throws MessagingException{
 
         ApiResponse apiResponse=ApiResponse.builder()
@@ -33,6 +36,20 @@ public class RegistrationController {
                     .build();
             return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser (@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest){
+        ApiResponse apiResponse=ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .data(userService.login(loginRequest))
+                .timeStamp(ZonedDateTime.now())
+                .path(httpServletRequest.getRequestURI())
+                .isSuccessful(true)
+                .build();
+        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
+             }
+             
     @PostMapping("/resendtoken")
     public ResponseEntity<?> resendToken(@RequestBody ResendTokenRequest resendTokenRequest, HttpServletRequest httpServletRequest)
             throws MessagingException{
@@ -44,8 +61,10 @@ public class RegistrationController {
                 .isSuccessful(true)
                 .build();
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
-    
-}
+
+    }
+
+
 
 
     @PostMapping("/resetpassword")

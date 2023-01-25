@@ -4,6 +4,7 @@ import com.semicolon.ewallet.user.card.Card;;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -23,7 +24,7 @@ public class User {
         public User(String firstName,String lastName,String email,String password){
             this.firstName = firstName;
             this.lastName = lastName;
-            this.emailAddress = email;
+            this.emailAddress = emailAddress;
             this.password = password;
         }
 
