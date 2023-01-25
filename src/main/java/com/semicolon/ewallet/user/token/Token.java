@@ -1,7 +1,7 @@
 package com.semicolon.ewallet.user.token;
 
+
 import com.semicolon.ewallet.user.User;
-import jakarta.annotation.Nonnull;
 import lombok.Data;
 
 import org.springframework.data.annotation.Id;

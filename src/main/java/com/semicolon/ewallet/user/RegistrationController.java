@@ -2,9 +2,10 @@ package com.semicolon.ewallet.user;
 
 import com.semicolon.ewallet.Exception.ApiResponse;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
-import com.semicolon.ewallet.user.token.dtos.ResendTokenRequest;
+import com.semicolon.ewallet.user.token.ResendTokenRequest;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +18,13 @@ import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping("api/v1/user")
-public class Controller{
+@Slf4j
+public class RegistrationController {
 
     @Autowired
     UserService userService;
-
-    @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest,HttpServletRequest httpServletRequest)
-            throws MessagingException{
+    @PostMapping("signup")
+    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest, HttpServletRequest httpServletRequest) throws MessagingException{
         ApiResponse apiResponse=ApiResponse.builder()
                     //.status(HttpStatus.OK.value())
                     .data(userService.register(signUpRequest))

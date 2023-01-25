@@ -1,18 +1,17 @@
 package com.semicolon.ewallet.user;
-
+import com.semicolon.ewallet.Exception.RegistrationException;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
+import com.semicolon.ewallet.user.dto.SignUpResponse;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.email.EmailService;
 import com.semicolon.ewallet.user.token.Token;
-import com.semicolon.ewallet.user.token.dtos.ResendTokenRequest;
+import com.semicolon.ewallet.user.token.ResendTokenRequest;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Random;
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -26,31 +25,38 @@ public class UserServiceImpl implements UserService{
     private EmailService emailService;
 
     @Override
-    public String register(SignUpRequest signUpRequest) throws MessagingException{
+    public SignUpResponse register(SignUpRequest signUpRequest) throws MessagingException{
         boolean emailExists=userRepository
-                .findByEmailIgnoreCase(signUpRequest.getEmail())
+                .findByEmailAddressIgnoreCase(signUpRequest.getEmailAddress())
                 .isPresent();
-        if(emailExists)throw new IllegalStateException("Email Address already exists");
+        if(emailExists)throw new RegistrationException("Email Address already exists");
         User user = new User(
                 signUpRequest.getFirstName(),
                 signUpRequest.getLastName(),
-                signUpRequest.getEmail(),
+                signUpRequest.getEmailAddress(),
                 signUpRequest.getPassword()
         );
         userRepository.save(user);
         String token = generateToken(user);
-        emailSender.send(signUpRequest.getEmail(), buildEmail(signUpRequest.getFirstName(), token));
+        emailSender.send(signUpRequest.getEmailAddress(), buildEmail(signUpRequest.getFirstName(), token));
 
-        return token;
+        SignUpResponse sign = new SignUpResponse();
+        sign.setEmailAddress(signUpRequest.getEmailAddress());
+        sign.setFirstName(signUpRequest.getFirstName());
+        sign.setLastName(signUpRequest.getLastName());
+        sign.setToken(token);
+
+
+        return sign;
     }
 
     @Override
     public String resendToken(ResendTokenRequest resendTokenRequest) throws MessagingException {
-        User foundUser = userRepository.findByEmailIgnoreCase(resendTokenRequest.getEmail()).orElseThrow(()->new
+        User foundUser = userRepository.findByEmailAddressIgnoreCase(resendTokenRequest.getEmailAddress()).orElseThrow(()->new
                 IllegalStateException("this email does not exist"));
         SecureRandom random = new SecureRandom();
         String token = String.valueOf(1000 + random.nextInt(9999));
-        emailService.send(resendTokenRequest.getEmail(), buildEmail(foundUser.getFirstName(), token) );
+        emailService.send(resendTokenRequest.getEmailAddress(), buildEmail(foundUser.getFirstName(), token) );
         return "token has been resent successfully";
     }
 
@@ -132,7 +138,7 @@ public class UserServiceImpl implements UserService{
                 user
         );
 
-        return token;
+        return confirmationToken.getToken();
     }
 
 //    public static void main(String[] args) {
