@@ -1,12 +1,14 @@
 package com.semicolon.ewallet.user.token;
 
+import jakarta.mail.MessagingException;
+
 import java.util.Optional;
 
 public interface TokenService{
+     void  saveConfirmationToken(Token token);
 
-    public void  saveConfirmationToken(Token token);
+     Optional<Token> getConfirmationToken(String token);
+     void deleteExpiredToken();
+     void setConfirmationToken(String token);
 
-    public Optional<Token> getConfirmationToken(String token);
-    public void deleteExpiredToken();
-    public void setConfirmationToken(String token);
 }
