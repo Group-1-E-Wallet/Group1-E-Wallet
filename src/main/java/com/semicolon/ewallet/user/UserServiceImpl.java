@@ -17,7 +17,6 @@ import com.semicolon.ewallet.user.token.TokenService;
 
 import com.semicolon.ewallet.user.token.ResendTokenRequest;
 
-
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,9 +36,7 @@ public class UserServiceImpl implements UserService {
     EmailSender emailSender;
     @Autowired
     UserRepository userRepository;
-
     @Autowired
-
     TokenService tokenService;
 
 @Autowired
@@ -108,6 +105,7 @@ public class UserServiceImpl implements UserService {
         String token = String.valueOf(1000 + random.nextInt(9999));
         emailService.send(resendTokenRequest.getEmailAddress(), buildEmail(foundUser.getFirstName(), token) );
         return "token has been resent successfully";
+
     }
 
     private String buildEmail(String firstName, String token){
@@ -187,11 +185,8 @@ public class UserServiceImpl implements UserService {
                 LocalDateTime.now().plusMinutes(10),
                 user
         );
-
-
         tokenService.saveConfirmationToken(confirmationToken);
-
-        return confirmationToken.getToken();
+        return token;
     }
 
     public String login(LoginRequest loginRequest){
