@@ -4,6 +4,7 @@ import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.SignUpResponse;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.token.Token;
+import com.semicolon.ewallet.user.token.TokenService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class UserServiceImpl implements UserService{
     EmailSender emailSender;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TokenService tokenService;
 
     @Override
     public SignUpResponse register(SignUpRequest signUpRequest) throws MessagingException{
@@ -41,7 +44,6 @@ public class UserServiceImpl implements UserService{
         sign.setFirstName(signUpRequest.getFirstName());
         sign.setLastName(signUpRequest.getLastName());
         sign.setToken(token);
-
 
         return sign;
     }
@@ -123,8 +125,9 @@ public class UserServiceImpl implements UserService{
                 LocalDateTime.now().plusMinutes(10),
                 user
         );
+        tokenService.saveConfirmationToken(confirmationToken);
+        return token;
 
-        return confirmationToken.getToken();
     }
 
 
