@@ -27,8 +27,8 @@ public class TokenServiceImpl implements TokenService{
     }
 
     @Override
-    public void setConfirmationToken(String token){
-        tokenRepository.setConfirmedAt(LocalDateTime.now(), token);
+    public void confirmationToken(String token){
+        tokenRepository.confirmedAt(LocalDateTime.now(), token);
 
     }
 }
