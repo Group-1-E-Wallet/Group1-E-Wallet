@@ -1,24 +1,40 @@
 package com.semicolon.ewallet.user;
 import com.semicolon.ewallet.Exception.RegistrationException;
+import com.semicolon.ewallet.kyc.card.CardRequest;
+import com.semicolon.ewallet.kyc.Identification;
+import com.semicolon.ewallet.kyc.card.CardService;
+import com.semicolon.ewallet.user.dto.AddAccountRequest;
+import com.semicolon.ewallet.user.dto.CompleteRegistrationRequest;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.SignUpResponse;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.token.Token;
+import com.semicolon.ewallet.user.token.TokenService;
+import com.squareup.okhttp.*;
 import jakarta.mail.MessagingException;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService{
-
+    private final String SECRET_KEY = System.getenv("PAYSTACK_SECRET_KEY");
     @Autowired
     EmailSender emailSender;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    CardService cardService;
 
     @Override
     public SignUpResponse register(SignUpRequest signUpRequest) throws MessagingException{
@@ -45,6 +61,85 @@ public class UserServiceImpl implements UserService{
 
         return sign;
     }
+
+    @Override
+    public User getByEmailAddress(String emailAddress) {
+        return userRepository.findByEmailAddressIgnoreCase(emailAddress).orElseThrow(()-> new RegistrationException("user does not exist"));
+    }
+
+    @Override
+    public User getIdentification(Identification id) {
+        return userRepository.saveUserIdentification(id);
+    }
+
+    @Override
+    public String completeRegistration( CompleteRegistrationRequest completeRegistrationRequest) {
+        var user=userRepository.findByEmailAddressIgnoreCase(completeRegistrationRequest
+                .getEmailAddress()).orElseThrow(()-> new RegistrationException("Email Address already exists"));
+
+        kycUpdate(completeRegistrationRequest, user);
+        user.getCards().add(cardService.addCard(completeRegistrationRequest.getCardRequest()));
+        nextOfKinUpdate(completeRegistrationRequest, user);
+        userRepository.save(user);
+        return "User details updated";
+    }
+
+    private void nextOfKinUpdate(CompleteRegistrationRequest completeRegistrationRequest, User user) {
+        user.getNextOfKin().setFullName(completeRegistrationRequest.getFullName());
+        user.getNextOfKin().setEmailAddress(completeRegistrationRequest.getEmailAddress());
+        user.getNextOfKin().setPhoneNumber(completeRegistrationRequest.getPhoneNumber());
+        user.getNextOfKin().setRelationship(completeRegistrationRequest.getRelationship());
+    }
+
+    private void kycUpdate(CompleteRegistrationRequest completeRegistrationRequest, User user) {
+        user.getKyc().setHomeAddress(completeRegistrationRequest.getHomeAddress());
+        user.getKyc().setIdentification(completeRegistrationRequest.getIdentity());
+    }
+
+    @Override
+    public void validateBvn(AddAccountRequest addAccountRequest) throws IOException {
+
+        OkHttpClient client = new OkHttpClient();
+        MediaType mediaType = MediaType.parse("application/json");
+
+        JSONObject json = new JSONObject();
+        try{
+            json.put("bvn", addAccountRequest.getBvn());
+            json.put("account_number", addAccountRequest.getAccountNumber());
+            json.put("bank_code", addAccountRequest.getBankCode());
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        RequestBody body = RequestBody.create(mediaType, json.toString());
+
+        Request request = new Request.Builder()
+                .url("https://api.paystack.co/bvn/match")
+                .post(body)
+                .addHeader("Authorization", "Bearer "+SECRET_KEY)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        Response response = client.newCall(request).execute();
+        log.info(response.body().string());
+
+    }
+
+    @Override
+    public String validateAccount(CardRequest cardRequest) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://api.paystack.co/decision/bin/"
+                        +cardRequest.getCardNumber().substring(0, 6))
+                .get()
+                .addHeader("Authorization", "Bearer "+SECRET_KEY)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        return response.body().string();
+    }
+
 
     private String buildEmail(String firstName, String token){
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -123,9 +218,11 @@ public class UserServiceImpl implements UserService{
                 LocalDateTime.now().plusMinutes(10),
                 user
         );
-
+        tokenService.saveConfirmationToken(confirmationToken);
         return confirmationToken.getToken();
     }
+
+
 
 
 }

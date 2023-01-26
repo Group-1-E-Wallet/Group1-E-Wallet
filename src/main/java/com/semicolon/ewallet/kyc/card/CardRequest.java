@@ -1,14 +1,11 @@
-package com.semicolon.ewallet.user.card;
+package com.semicolon.ewallet.kyc.card;
 
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
-
-@Document
 @Data
-public class Card{
+public class CardRequest {
     private String cardName;
     private String cardNumber;
     private LocalDate expiryDate;

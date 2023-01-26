@@ -8,5 +8,5 @@ public interface TokenService{
 
     public Optional<Token> getConfirmationToken(String token);
     public void deleteExpiredToken();
-    public void setConfirmationToken(String token);
+    public void confirmationToken(String token);
 }
