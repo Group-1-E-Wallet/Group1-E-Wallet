@@ -20,6 +20,7 @@ import java.time.ZonedDateTime;
 public class RegistrationController {
     @Autowired
     UserService userService;
+
     @PostMapping("signup")
     public ResponseEntity<?> signUP(@RequestBody SignUpRequest signUpRequest,
                                     HttpServletRequest httpServletRequest) throws MessagingException{

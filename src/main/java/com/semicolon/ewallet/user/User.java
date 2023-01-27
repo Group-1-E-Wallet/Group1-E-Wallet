@@ -1,6 +1,6 @@
 package com.semicolon.ewallet.user;
 
-import com.semicolon.ewallet.user.card.Card;;
+import com.semicolon.ewallet.user.card.Card;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;

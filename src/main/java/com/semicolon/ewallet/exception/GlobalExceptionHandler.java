@@ -11,9 +11,9 @@ import java.time.ZonedDateTime;
 public class GlobalExceptionHandler{
 
     @ExceptionHandler
-    public ResponseEntity<?> userAlreadyExistException(com.semicolon.ewallet.exception.RegistrationException registrationException,
+    public ResponseEntity<?> userAlreadyExistException(RegistrationException registrationException,
                                                        HttpServletRequest httpServletRequest){
-        com.semicolon.ewallet.exception.ApiResponse apiResponse = ApiResponse.builder()
+        ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .isSuccessful(false)
@@ -21,11 +21,12 @@ public class GlobalExceptionHandler{
                 .data(registrationException.getMessage())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(apiResponse, HttpStatus.CONFLICT);
     }
+
     @ExceptionHandler
     public  ResponseEntity<ApiResponse>GenericHandler(Exception exception, HttpServletRequest httpServletRequest){
-        com.semicolon.ewallet.exception.ApiResponse apiResponse = ApiResponse.builder()
+        ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
                 .data(exception.getMessage())
                 .path(httpServletRequest.getRequestURI())
