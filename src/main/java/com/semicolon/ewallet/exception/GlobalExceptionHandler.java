@@ -24,6 +24,19 @@ public class GlobalExceptionHandler{
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.CONFLICT);
     }
     @ExceptionHandler
+    public ResponseEntity<?> accountException(com.semicolon.ewallet.Exception.AccountException accountException,
+                                              HttpServletRequest httpServletRequest){
+        ApiResponse apiResponse =  ApiResponse.builder()
+                .timeStamp(ZonedDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .isSuccessful(false)
+                .path(httpServletRequest.getRequestURI())
+                .data(accountException.getMessage())
+                .build();
+
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler
     public  ResponseEntity<ApiResponse>GenericHandler(Exception exception, HttpServletRequest httpServletRequest){
         com.semicolon.ewallet.exception.ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())

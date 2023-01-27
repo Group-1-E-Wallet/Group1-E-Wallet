@@ -1,13 +1,6 @@
 package com.semicolon.ewallet.user.token;
-
-import com.semicolon.ewallet.user.User;
-import com.semicolon.ewallet.user.UserRepository;
-import com.semicolon.ewallet.user.email.EmailService;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -31,9 +24,11 @@ public class TokenServiceImpl implements TokenService{
         tokenRepository.deleteTokenByExpiredAtBefore(LocalDateTime.now());
     }
 
+
+
     @Override
-    public void setConfirmationToken(String token){
-        tokenRepository.setConfirmedAt(LocalDateTime.now(), token);
+    public void setTokenConfirmationAt(String token){
+        tokenRepository.confirmedAt(LocalDateTime.now(), token);
 
     }
 

@@ -1,11 +1,12 @@
 package com.semicolon.ewallet.user;
-
-import com.semicolon.ewallet.user.card.Card;;
+import com.semicolon.ewallet.kyc.Kyc;
+import com.semicolon.ewallet.kyc.NextOfKin;
+import com.semicolon.ewallet.kyc.card.Card;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.List;
 
 @Document
 @Data
@@ -15,11 +16,16 @@ public class User {
         private String firstName;
         private String lastName;
         private String  password;
-        private boolean isVerified;
+        private Boolean isVerified;
         private String emailAddress;
+        @DBRef
+        private Kyc kyc;
+        @DBRef
+        private NextOfKin nextOfKin;
+        @DBRef
+        private List<Card> cards;
         private String nin;
         private String address;
-        private String nextOfKin;
         private Card card;
         public User(String firstName,String lastName,String email,String password){
             this.firstName = firstName;
