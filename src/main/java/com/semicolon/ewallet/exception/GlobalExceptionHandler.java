@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.Exception;
+package com.semicolon.ewallet.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -11,9 +11,9 @@ import java.time.ZonedDateTime;
 public class GlobalExceptionHandler{
 
     @ExceptionHandler
-    public ResponseEntity<?> userAlreadyExistException(RegistrationException registrationException,
+    public ResponseEntity<?> userAlreadyExistException(com.semicolon.ewallet.exception.RegistrationException registrationException,
                                                        HttpServletRequest httpServletRequest){
-        ApiResponse apiResponse =  ApiResponse.builder()
+        com.semicolon.ewallet.exception.ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .isSuccessful(false)
@@ -24,8 +24,8 @@ public class GlobalExceptionHandler{
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.CONFLICT);
     }
     @ExceptionHandler
-    public ResponseEntity<?> accountException(AccountException accountException,
-                                                       HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> accountException(com.semicolon.ewallet.Exception.AccountException accountException,
+                                              HttpServletRequest httpServletRequest){
         ApiResponse apiResponse =  ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
@@ -38,13 +38,13 @@ public class GlobalExceptionHandler{
     }
     @ExceptionHandler
     public  ResponseEntity<ApiResponse>GenericHandler(Exception exception, HttpServletRequest httpServletRequest){
-        ApiResponse apiResponse = ApiResponse.builder()
+        com.semicolon.ewallet.exception.ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
                 .data(exception.getMessage())
                 .path(httpServletRequest.getRequestURI())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .isSuccessful(false)
                 .build();
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 }

@@ -12,10 +12,6 @@ public interface TokenRepository extends MongoRepository<Token, String> {
     Optional<Token> findByToken(String token);
 
     void deleteTokenByExpiredAtBefore(LocalDateTime now);
-
-//    @Query("UPDATE ConfirmationToken confirmationToken " +
-//            "SET confirmationToken.confirmedAt = ?1 " +
-//            "WHERE confirmationToken.confirmedAt = ?2 ")
     @Transactional
     void confirmedAt(LocalDateTime now, String token);
 }

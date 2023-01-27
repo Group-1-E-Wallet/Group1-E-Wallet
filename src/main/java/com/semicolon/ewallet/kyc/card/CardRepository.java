@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface CardRepository extends MongoRepository<Card, String> {
     // Optional<Card> findByEmailAddressIgnoreCase(String emailAddress);
 
-    Optional<Card> findByCardId(Object id);
+    //Optional<Card> findByid(Object id);
 }

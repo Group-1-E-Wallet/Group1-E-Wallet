@@ -8,6 +8,6 @@ import java.time.LocalDate;
 public class CardRequest {
     private String cardName;
     private String cardNumber;
-    private LocalDate expiryDate;
+    private String expiryDate;
     private String cvv;
 }

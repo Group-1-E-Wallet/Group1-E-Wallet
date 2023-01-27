@@ -1,19 +1,18 @@
 package com.semicolon.ewallet.kyc.card;
-
-import com.semicolon.ewallet.Exception.RegistrationException;
+import com.semicolon.ewallet.exception.RegistrationException;
 import com.semicolon.ewallet.user.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class CardServiceImpl implements CardService{
 
     @Autowired
     CardRepository cardRepository;
-    @Autowired
-    UserService userService;
 
     @Override
     public Card addCard(CardRequest cardRequest) {
@@ -23,14 +22,13 @@ public class CardServiceImpl implements CardService{
                 cardRequest.getExpiryDate(),
                 cardRequest.getCvv()
         );
-        cardRepository.save(card);
+        log.info(cardRequest.getCardName());
 
-        return card;
+        return cardRepository.save(card);
     }
-
     @Override
     public String deleteCard(String id) {
-        var card = cardRepository.findByCardId(id).orElseThrow(()-> new RegistrationException("invalid card"));
+        var card = cardRepository.findById(id).orElseThrow(()-> new RegistrationException("invalid card"));
 
         return "delete update";
     }

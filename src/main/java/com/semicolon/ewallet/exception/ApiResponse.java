@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.Exception;
+package com.semicolon.ewallet.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

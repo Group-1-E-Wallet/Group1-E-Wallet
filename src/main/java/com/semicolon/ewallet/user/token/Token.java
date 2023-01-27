@@ -23,6 +23,7 @@ public class Token{
     private User user;
 
 
+    public Token(){}
     public Token(String token,LocalDateTime createdAt,LocalDateTime expiredAt,User user){
         this.token = token;
         this.createdAt = createdAt;

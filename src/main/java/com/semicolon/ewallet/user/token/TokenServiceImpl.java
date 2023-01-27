@@ -1,15 +1,16 @@
 package com.semicolon.ewallet.user.token;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class TokenServiceImpl implements TokenService{
     @Autowired
-    TokenRepository tokenRepository;
+    private TokenRepository tokenRepository;
+
     @Override
     public void saveConfirmationToken(Token token){
         tokenRepository.save(token);
@@ -21,14 +22,16 @@ public class TokenServiceImpl implements TokenService{
     }
 
     @Override
-    public void deleteExpiredToken( ){
+    public void deleteExpiredToken(){
         tokenRepository.deleteTokenByExpiredAtBefore(LocalDateTime.now());
-
     }
 
+
+
     @Override
-    public void confirmationToken(String token){
+    public void setTokenConfirmationAt(String token){
         tokenRepository.confirmedAt(LocalDateTime.now(), token);
 
     }
+
 }
