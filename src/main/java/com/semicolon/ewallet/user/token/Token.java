@@ -30,4 +30,6 @@ public class Token{
         this.expiredAt = expiredAt;
         this.user = user;
     }
+
+
 }

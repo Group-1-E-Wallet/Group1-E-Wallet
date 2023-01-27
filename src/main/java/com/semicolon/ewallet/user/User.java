@@ -1,14 +1,11 @@
 package com.semicolon.ewallet.user;
-
 import com.semicolon.ewallet.kyc.Kyc;
 import com.semicolon.ewallet.kyc.NextOfKin;
 import com.semicolon.ewallet.kyc.card.Card;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.List;
 
 @Document
@@ -33,7 +30,8 @@ public class User {
         public User(String firstName,String lastName,String email,String password){
             this.firstName = firstName;
             this.lastName = lastName;
-            this.emailAddress = email;
+            this.emailAddress = emailAddress;
             this.password = password;
         }
+
 }

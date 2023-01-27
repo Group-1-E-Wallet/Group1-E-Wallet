@@ -3,7 +3,6 @@ import com.semicolon.ewallet.exception.ApiResponse;
 import com.semicolon.ewallet.kyc.card.CardRequest;
 import com.semicolon.ewallet.user.dto.*;
 import com.semicolon.ewallet.user.dto.ResendTokenRequest;
-
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ public class RegistrationController {
     @Autowired
     UserService userService;
     @PostMapping("/signup")
-
     public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest, HttpServletRequest httpServletRequest) throws MessagingException {
 
         ApiResponse apiResponse = ApiResponse.builder()
@@ -102,9 +100,8 @@ public class RegistrationController {
                 .build();
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
-    @PostMapping("/confirmed")
+    @PostMapping("/confirm-token")
     public ResponseEntity<?> confirmed(@RequestBody TokenConfirmationRequest tokenConfirmationRequest, HttpServletRequest httpServletRequest) throws MessagingException{
-
         ApiResponse apiResponse=ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .data(userService.tokenConfirmation(tokenConfirmationRequest))
@@ -114,7 +111,6 @@ public class RegistrationController {
                 .build();
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
-
     @GetMapping("/validateAccount")
     public ResponseEntity<?> accountValidation(@RequestBody CardRequest cardDetailsRequest,
                                                HttpServletRequest httpServletRequest) throws IOException {
@@ -128,6 +124,7 @@ public class RegistrationController {
                 .build();
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
+
     @PostMapping("/bvnMatch")
     public ResponseEntity<?> matchBvn(@RequestBody AddAccountRequest addAccountRequest,
                                       HttpServletRequest httpServletRequest) throws IOException {
@@ -142,11 +139,4 @@ public class RegistrationController {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-
-
-
-
-
-
-
 }
