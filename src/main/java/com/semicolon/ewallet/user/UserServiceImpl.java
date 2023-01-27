@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
     CardService cardService;
     @Autowired
     private EmailService emailService;
+    //To get your secret key secured
     private final String SECRET_KEY = System.getenv("PAYSTACK_SECRET_KEY");
 
 
@@ -74,6 +75,7 @@ public class UserServiceImpl implements UserService {
             private String hashPassword (String password){
                 return BCrypt.hashpw(password, BCrypt.gensalt());
             }
+            @Override
             public String login (LoginRequest loginRequest) {
             var foundUser = userRepository.findByEmailAddressIgnoreCase(loginRequest.getEmailAddress());
             if (Objects.isNull(foundUser)) throw new RegistrationException("user does not exist");
