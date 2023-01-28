@@ -139,4 +139,18 @@ public class RegistrationController {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @PostMapping("/verifyreceiversaccount")
+    public ResponseEntity<?> verifyReceiversAccount(@RequestBody VerifyReceiversAccountRequest verifyReceiversAccountRequest,
+                                         HttpServletRequest httpServletRequest)throws IOException{
+        userService.verifyReceiversAccount(verifyReceiversAccountRequest);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .data(userService.verifyReceiversAccount(verifyReceiversAccountRequest))
+                .timeStamp(ZonedDateTime.now())
+                .path(httpServletRequest.getRequestURI())
+                .isSuccessful(true)
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }
