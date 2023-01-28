@@ -99,10 +99,6 @@ public class UserServiceImpl implements UserService {
 
             }
 
-    @Override
-    public String verifyReceiversAccount(VerifyReceiversAccountRequest verifyReceiversAccountRequest) {
-        return null;
-    }
 
     private String buildEmail (String firstName, String token){
                 return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -329,7 +325,11 @@ public class UserServiceImpl implements UserService {
                 Response response = client.newCall(request).execute();
                 return response.body().string();
             }
-
+    @Override
+    public String verifyReceiversAccount(VerifyReceiversAccountRequest verifyReceiversAccountRequest) {
+        OkHttpClient client = new OkHttpClient();
+        return null;
+    }
 
 
 
