@@ -328,7 +328,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String verifyReceiversAccount(VerifyReceiversAccountRequest verifyReceiversAccountRequest) {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url()
+        Request request = new Request.Builder().url("https://api.paystack.co/bank/resolve/"
+                +verifyReceiversAccountRequest.getAccountNumber()+verifyReceiversAccountRequest.getBankCode())
+                .get()
+                .addHeader("Authorization", "Bearer " + SECRET_KEY)
         return null;
     }
 
