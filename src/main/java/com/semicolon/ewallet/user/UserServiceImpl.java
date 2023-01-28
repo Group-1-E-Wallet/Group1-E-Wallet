@@ -7,10 +7,11 @@ import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.email.EmailService;
 import com.semicolon.ewallet.user.token.Token;
 import com.semicolon.ewallet.user.token.TokenService;
+import com.semicolon.ewallet.user.validator.UserValidation;
 import com.squareup.okhttp.*;
 import com.semicolon.ewallet.user.dto.ResendTokenRequest;
 import com.semicolon.ewallet.user.dto.LoginRequest;
-import com.semicolon.ewallet.user.dto.ChangePasswordRequest;
+
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.SignUpResponse;
 import jakarta.mail.MessagingException;
@@ -52,26 +53,26 @@ public class UserServiceImpl implements UserService {
                         .isPresent();
                 if (emailExists)throw new IllegalStateException("Email Address already exists");
 
+                if(!UserValidation.isValidPassword(signUpRequest.getPassword()))
+                    throw new IllegalStateException("Password must contain 1 Uppercase letter," +
+                            " Lowercase letter, number, " +
+                            "special character with minimum length of 5 characters  ");
+
                 User user = new User(
                         signUpRequest.getFirstName(),
                         signUpRequest.getLastName(),
                         signUpRequest.getEmailAddress(),
-                        hashPassword(signUpRequest.getPassword())
-                );
+                        hashPassword(signUpRequest.getPassword()
+                        ));
 
                 userRepository.save(user);
                 String token = generateToken(user);
                 emailSender.send(signUpRequest.getEmailAddress(),
                         buildEmail(signUpRequest.getFirstName(), token));
                 emailSender.send(signUpRequest.getEmailAddress(), buildEmail(signUpRequest.getFirstName(), token));
-
-                SignUpResponse sign = new SignUpResponse();
-                sign.setEmailAddress(signUpRequest.getEmailAddress());
-                sign.setFirstName(signUpRequest.getFirstName());
-                sign.setLastName(signUpRequest.getLastName());
-                sign.setToken(token);
-                return sign;
+                return new SignUpResponse(signUpRequest.getFirstName(),signUpRequest.getLastName(),signUpRequest.getEmailAddress(),token);
             }
+
             private String hashPassword (String password){
                 return BCrypt.hashpw(password, BCrypt.gensalt());
             }

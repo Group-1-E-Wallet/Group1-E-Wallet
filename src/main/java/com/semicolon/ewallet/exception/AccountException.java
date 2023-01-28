@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.Exception;
+package com.semicolon.ewallet.exception;
 
 public class AccountException extends RuntimeException{
     public AccountException(String message) {

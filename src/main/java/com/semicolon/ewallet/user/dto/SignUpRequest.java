@@ -1,5 +1,6 @@
 package com.semicolon.ewallet.user.dto;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data

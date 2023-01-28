@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 @Slf4j
@@ -23,32 +22,22 @@ public class CardServiceImpl implements CardService{
                 cardRequest.getExpiryDate(),
                 cardRequest.getCvv()
         );
-        log.info(cardRequest.getCardName());
-
-        return cardRepository.save(card);
+        cardRepository.save(card);
+        return card ;
     }
-    //THIS METHOD IS SUPPOSED TO DELETE CARD BUT IT KEEPS RETURNING THE CARD IF YOU START LOOKING FOR IT IN THE DATABASE
-//    @Override
-//    public String deleteCard(DeleteCardRequest deleteCardRequest) {
-//        var foundCard = cardRepository.findById(deleteCardRequest.getId());
-//        String randomNumber = UUID.randomUUID().toString();
-//        foundCard.get().setCardNumber("deleted"+deleteCardRequest.getId()+randomNumber);
-//        cardRepository.save(foundCard.get());
-//        return "delete update";
-//    }
+
 
     @Override
-    public String deleteCard(DeleteCardRequest deleteCardRequest) {
-        var  foundCard = cardRepository.findById(deleteCardRequest.getId())
-                .orElseThrow(() -> new RegistrationException("Unable to delete Card"));
-        cardRepository.deleteById(foundCard.getId());
-        return "Card Deleted";
+    public String deleteCard(String id) {
+         cardRepository.findById(id).orElseThrow(()-> new RegistrationException("invalid card"));
+
+        return "delete update";
     }
 
     @Override
     public String updateCard(String id, CardRequest cardRequest) {
         var foundCard = cardRepository.findById(id).orElseThrow(()-> new RegistrationException("invalid card"));
-        if (foundCard != null) {
+        if (foundCard.getCardName() != null) {
             foundCard.setCardName(cardRequest.getCardName());
             foundCard.setCardNumber(cardRequest.getCardNumber());
             foundCard.setExpiryDate(cardRequest.getExpiryDate());
@@ -61,13 +50,6 @@ public class CardServiceImpl implements CardService{
     @Override
     public List<Card> viewAllCard() {
         return cardRepository.findAll();
-    }
-
-    @Override
-    public Optional<Card> findById(String id) {
-       var foundCard = cardRepository.findById(id);
-       if (!foundCard.isPresent()) throw new IllegalStateException("Card not found");
-        return foundCard;
     }
 
 

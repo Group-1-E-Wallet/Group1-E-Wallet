@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
+
 @Document
 @Data
 public class User {
@@ -15,6 +16,7 @@ public class User {
         private String id;
         private String firstName;
         private String lastName;
+
         private String  password;
         private Boolean isVerified;
 
