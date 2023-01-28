@@ -28,7 +28,7 @@ public interface UserService{
     String validateAccount(CardRequest cardRequest) throws IOException;
     String resendToken(ResendTokenRequest resendTokenRequest) throws MessagingException;
 
-    String verifyReceiversAccount(VerifyReceiversAccountRequest verifyReceiversAccountRequest);
+    String verifyReceiversAccount(VerifyReceiversAccountRequest verifyReceiversAccountRequest) throws IOException;
 
 
 }
