@@ -328,6 +328,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String verifyReceiversAccount(VerifyReceiversAccountRequest verifyReceiversAccountRequest) {
         OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url()
         return null;
     }
 
