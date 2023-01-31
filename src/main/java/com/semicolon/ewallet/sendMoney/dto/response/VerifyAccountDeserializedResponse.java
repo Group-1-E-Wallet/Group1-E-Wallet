@@ -1,11 +1,13 @@
-package com.semicolon.ewallet.user.sendMoney.dto.response;
+package com.semicolon.ewallet.sendMoney.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class VerifyAccountDeserializedResponse {
     @JsonIgnore
     private boolean status;
@@ -15,7 +17,7 @@ public class VerifyAccountDeserializedResponse {
 
     @Getter
     @Setter
-    public static class Data{
+    public static class Data {
         @JsonIgnore
         private String account_number;
         private String account_name;

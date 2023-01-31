@@ -56,7 +56,7 @@ public class CardController {
     public ResponseEntity<?> findById(@PathVariable String id,  HttpServletRequest httpServletRequest){
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .data(cardService.findById(id))
+                .data(cardService.viewId(id))
                 .timeStamp(ZonedDateTime.now())
                 .path(httpServletRequest.getRequestURI())
                 .isSuccessful(true)

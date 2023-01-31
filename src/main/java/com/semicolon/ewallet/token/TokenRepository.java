@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.user.token;
+package com.semicolon.ewallet.token;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

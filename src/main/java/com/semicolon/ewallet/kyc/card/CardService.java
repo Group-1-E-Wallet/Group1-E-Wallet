@@ -8,6 +8,5 @@ public interface CardService {
     String deleteCard(DeleteCardRequest deleteCardRequest);
     String updateCard(String id, CardRequest cardRequest);
     List<Card> viewAllCard();
-
-    Optional<Card> findById(String id);
+    Card viewId(String id);
 }

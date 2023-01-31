@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -64,10 +62,8 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
-    public Optional<Card> findById(String id) {
-       var foundCard = cardRepository.findById(id);
-       if (!foundCard.isPresent()) throw new IllegalStateException("Card not found");
-        return foundCard;
+    public Card viewId(String id) {
+        return cardRepository.findById(id).orElseThrow(()-> new RegistrationException("invalid card"));
     }
 
 
