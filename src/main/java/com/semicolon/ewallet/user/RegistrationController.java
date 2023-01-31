@@ -3,6 +3,7 @@ import com.semicolon.ewallet.exception.ApiResponse;
 import com.semicolon.ewallet.kyc.card.CardRequest;
 import com.semicolon.ewallet.user.dto.*;
 import com.semicolon.ewallet.user.dto.ResendTokenRequest;
+import com.semicolon.ewallet.user.sendMoney.dto.request.TransferRecipientRequest;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,13 @@ public class RegistrationController {
     @Autowired
     UserService userService;
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest, HttpServletRequest httpServletRequest) throws MessagingException {
+    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest, HttpServletRequest httpServletRequest)
+            throws MessagingException {
+        SignUpResponse registeredUser = userService.register(signUpRequest);
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .data(userService.register(signUpRequest))
+                .data(registeredUser)
                 .timeStamp(ZonedDateTime.now())
                 .path(httpServletRequest.getRequestURI())
                 .isSuccessful(true)
@@ -139,14 +142,13 @@ public class RegistrationController {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-
-    @PostMapping("/verifyreceiversaccount")
-    public ResponseEntity<?> verifyReceiversAccount(@RequestBody VerifyReceiversAccountRequest verifyReceiversAccountRequest,
-                                         HttpServletRequest httpServletRequest)throws IOException{
-        userService.verifyReceiversAccount(verifyReceiversAccountRequest);
+    @PostMapping("/create-transfer-recipient")
+    public ResponseEntity<?> createTransferRecipient(@RequestBody TransferRecipientRequest transferRecipientRequest,
+                                                     HttpServletRequest httpServletRequest) throws IOException {
+        userService.createTransferRecipient(transferRecipientRequest);
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .data(userService.verifyReceiversAccount(verifyReceiversAccountRequest))
+                .data(userService.createTransferRecipient(transferRecipientRequest))
                 .timeStamp(ZonedDateTime.now())
                 .path(httpServletRequest.getRequestURI())
                 .isSuccessful(true)

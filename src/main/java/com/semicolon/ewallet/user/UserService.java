@@ -6,7 +6,9 @@ import com.semicolon.ewallet.user.dto.LoginRequest;
 import com.semicolon.ewallet.user.dto.ChangePasswordRequest;
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.SignUpResponse;
+import com.semicolon.ewallet.user.sendMoney.dto.request.TransferRecipientRequest;
 import jakarta.mail.MessagingException;
+
 import java.io.IOException;
 
 
@@ -27,8 +29,7 @@ public interface UserService{
     void validateBvn(AddAccountRequest addAccountRequest) throws IOException;
     String validateAccount(CardRequest cardRequest) throws IOException;
     String resendToken(ResendTokenRequest resendTokenRequest) throws MessagingException;
-
-    String verifyReceiversAccount(VerifyReceiversAccountRequest verifyReceiversAccountRequest) throws IOException;
+    Object createTransferRecipient(TransferRecipientRequest transferRecipientRequest) throws IOException;
 
 
 }

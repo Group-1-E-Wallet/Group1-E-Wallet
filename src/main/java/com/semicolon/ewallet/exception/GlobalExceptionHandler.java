@@ -24,7 +24,7 @@ public class GlobalExceptionHandler{
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.CONFLICT);
     }
     @ExceptionHandler
-    public ResponseEntity<?> accountException(com.semicolon.ewallet.Exception.AccountException accountException,
+    public ResponseEntity<?> accountException(com.semicolon.ewallet.exception.AccountException accountException,
                                               HttpServletRequest httpServletRequest){
         ApiResponse apiResponse =  ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())

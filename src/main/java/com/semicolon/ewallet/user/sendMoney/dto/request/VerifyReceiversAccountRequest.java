@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.user.dto;
+package com.semicolon.ewallet.user.sendMoney.dto.request;
 
 import lombok.Data;
 
