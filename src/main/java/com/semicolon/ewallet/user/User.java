@@ -17,6 +17,7 @@ public class User {
         private String lastName;
         private String  password;
         private Boolean isVerified;
+
         private String emailAddress;
         @DBRef
         private Kyc kyc;
