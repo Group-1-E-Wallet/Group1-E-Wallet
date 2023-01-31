@@ -6,7 +6,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableMongoRepositories
-public class EWalletApplication{
+public class
+
+ EWalletApplication{
 
     public static void main(String[] args){
         SpringApplication.run(EWalletApplication.class,args);

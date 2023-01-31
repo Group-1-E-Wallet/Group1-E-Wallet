@@ -1,17 +1,14 @@
 package com.semicolon.ewallet.user;
 import com.semicolon.ewallet.exception.RegistrationException;
-import com.semicolon.ewallet.kyc.card.CardRequest;
 import com.semicolon.ewallet.kyc.card.CardService;
 import com.semicolon.ewallet.user.dto.*;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.email.EmailService;
 import com.semicolon.ewallet.user.token.Token;
 import com.semicolon.ewallet.user.token.TokenService;
-import com.semicolon.ewallet.user.validator.UserValidation;
 import com.squareup.okhttp.*;
 import com.semicolon.ewallet.user.dto.ResendTokenRequest;
 import com.semicolon.ewallet.user.dto.LoginRequest;
-
 import com.semicolon.ewallet.user.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.SignUpResponse;
 import jakarta.mail.MessagingException;
@@ -49,15 +46,10 @@ public class UserServiceImpl implements UserService {
             @Override
             public SignUpResponse register (SignUpRequest signUpRequest) throws MessagingException {
                 boolean emailExists = userRepository
-                        .findByEmailAddressIgnoreCase(signUpRequest.getEmailAddress())
+                        .
+                        findByEmailAddressIgnoreCase(signUpRequest.getEmailAddress())
                         .isPresent();
                 if (emailExists)throw new IllegalStateException("Email Address already exists");
-
-                if(!UserValidation.isValidPassword(signUpRequest.getPassword()))
-                    throw new IllegalStateException("Password must contain 1 Uppercase letter," +
-                            " Lowercase letter, number, " +
-                            "special character with minimum length of 5 characters  ");
-
                 User user = new User(
                         signUpRequest.getFirstName(),
                         signUpRequest.getLastName(),
@@ -260,7 +252,7 @@ public class UserServiceImpl implements UserService {
             }
 
             @Override
-            public String completeRegistration (CompleteRegistrationRequest completeRegistrationRequest){
+            public String completeRegistration (CompleteRegistrationRequest completeRegistrationRequest) throws IOException{
                 var user = userRepository.findByEmailAddressIgnoreCase(completeRegistrationRequest
                         .getEmailAddress()).orElseThrow(() -> new RegistrationException("Email Address already exists"));
 
@@ -312,23 +304,5 @@ public class UserServiceImpl implements UserService {
                 log.info(response.body().string());
 
             }
-
-            @Override
-            public String validateAccount (CardRequest cardRequest) throws IOException {
-                OkHttpClient client = new OkHttpClient();
-
-                Request request = new Request.Builder()
-                        .url("https://api.paystack.co/decision/bin/"
-                                + cardRequest.getCardNumber().substring(0, 6))
-                        .get()
-                        .addHeader("Authorization", "Bearer " + SECRET_KEY)
-                        .build();
-
-                Response response = client.newCall(request).execute();
-                return response.body().string();
-            }
-
-
-
 
 }

@@ -22,10 +22,10 @@ public interface UserService{
     String resetPassword(ResetPasswordRequest resetPasswordRequest);
     void enableUser(String email);
     String tokenConfirmation(TokenConfirmationRequest tokenConfirmationRequest);
-     String completeRegistration(CompleteRegistrationRequest completeRegistrationRequest);
+     String completeRegistration(CompleteRegistrationRequest completeRegistrationRequest) throws IOException;
 
     void validateBvn(AddAccountRequest addAccountRequest) throws IOException;
-    String validateAccount(CardRequest cardRequest) throws IOException;
+   //
     String resendToken(ResendTokenRequest resendTokenRequest) throws MessagingException;
 
 

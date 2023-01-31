@@ -1,16 +1,17 @@
 package com.semicolon.ewallet.kyc.card;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public interface CardService {
-    Card addCard(CardRequest cardRequest);
-   // String deleteCard(DeleteCardRequest deleteCardRequest);
+    Card addCard(CardRequest cardRequest) throws IOException;
 
-    String deleteCard(String id);
+    String deleteCard(DeleteCardRequest deleteCardRequest);
 
     String updateCard(String id,CardRequest cardRequest);
     List<Card> viewAllCard();
 
-  //  Optional<Card> findById(String id);
+    Optional<Card> findById(String id);
+    String validateAccount(CardRequest cardRequest) throws IOException;
 }

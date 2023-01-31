@@ -5,6 +5,7 @@ import com.semicolon.ewallet.user.dto.*;
 import com.semicolon.ewallet.user.dto.ResendTokenRequest;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class RegistrationController {
     @Autowired
     UserService userService;
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest, HttpServletRequest httpServletRequest) throws MessagingException {
+    public ResponseEntity<?> signUp(@RequestBody @Valid SignUpRequest signUpRequest,HttpServletRequest httpServletRequest) throws MessagingException {
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -90,7 +91,7 @@ public class RegistrationController {
     }
     @PostMapping("/update-register")
     public ResponseEntity<?> completeRegistration(@RequestBody CompleteRegistrationRequest completeRegistrationRequest,
-                                                  HttpServletRequest httpServletRequest){
+                                                  HttpServletRequest httpServletRequest) throws IOException{
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .data(userService.completeRegistration(completeRegistrationRequest))
@@ -111,19 +112,7 @@ public class RegistrationController {
                 .build();
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
-    @GetMapping("/validateAccount")
-    public ResponseEntity<?> accountValidation(@RequestBody CardRequest cardDetailsRequest,
-                                               HttpServletRequest httpServletRequest) throws IOException {
 
-        ApiResponse apiResponse = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .data(userService.validateAccount(cardDetailsRequest))
-                .timeStamp(ZonedDateTime.now())
-                .path(httpServletRequest.getRequestURI())
-                .isSuccessful(true)
-                .build();
-        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
-    }
 
     @PostMapping("/bvnMatch")
     public ResponseEntity<?> matchBvn(@RequestBody AddAccountRequest addAccountRequest,
