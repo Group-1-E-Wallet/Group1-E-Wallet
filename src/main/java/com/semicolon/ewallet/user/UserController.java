@@ -1,6 +1,8 @@
 package com.semicolon.ewallet.user;
 import com.semicolon.ewallet.exception.ApiResponse;
 import com.semicolon.ewallet.kyc.card.CardRequest;
+import com.semicolon.ewallet.registration.dto.LoginRequest;
+import com.semicolon.ewallet.registration.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.*;
 import com.semicolon.ewallet.user.dto.ResendTokenRequest;
 import jakarta.mail.MessagingException;
@@ -15,45 +17,10 @@ import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping("api/v1/user")
-public class RegistrationController {
+public class UserController {
     @Autowired
     UserService userService;
-    @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest, HttpServletRequest httpServletRequest) throws MessagingException {
 
-        ApiResponse apiResponse = ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .data(userService.register(signUpRequest))
-                .timeStamp(ZonedDateTime.now())
-                .path(httpServletRequest.getRequestURI())
-                .isSuccessful(true)
-                .build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser (@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest){
-        ApiResponse apiResponse=ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .data(userService.login(loginRequest))
-                .timeStamp(ZonedDateTime.now())
-                .path(httpServletRequest.getRequestURI())
-                .isSuccessful(true)
-                .build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
-    @PostMapping("/resend-token")
-    public ResponseEntity<?> resendToken(@RequestBody ResendTokenRequest resendTokenRequest, HttpServletRequest httpServletRequest)
-            throws MessagingException{
-        ApiResponse apiResponse=ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .data(userService.resendToken(resendTokenRequest))
-                .timeStamp(ZonedDateTime.now())
-                .path(httpServletRequest.getRequestURI())
-                .isSuccessful(true)
-                .build();
-
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest, HttpServletRequest httpServletRequest) throws MessagingException {
         ApiResponse apiResponse = ApiResponse.builder()
@@ -100,17 +67,7 @@ public class RegistrationController {
                 .build();
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
-    @PostMapping("/confirm-token")
-    public ResponseEntity<?> confirmed(@RequestBody TokenConfirmationRequest tokenConfirmationRequest, HttpServletRequest httpServletRequest) throws MessagingException{
-        ApiResponse apiResponse=ApiResponse.builder()
-                .status(HttpStatus.OK.value())
-                .data(userService.tokenConfirmation(tokenConfirmationRequest))
-                .timeStamp(ZonedDateTime.now())
-                .path(httpServletRequest.getRequestURI())
-                .isSuccessful(true)
-                .build();
-        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
-    }
+
     @GetMapping("/validateAccount")
     public ResponseEntity<?> accountValidation(@RequestBody CardRequest cardDetailsRequest,
                                                HttpServletRequest httpServletRequest) throws IOException {

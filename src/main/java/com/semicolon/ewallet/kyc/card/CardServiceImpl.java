@@ -36,7 +36,7 @@ public class CardServiceImpl implements CardService{
     @Override
     public String updateCard(String id, CardRequest cardRequest) {
         var foundCard = cardRepository.findById(id).orElseThrow(()-> new RegistrationException("invalid card"));
-        if (foundCard.getCardName() != null) {
+        if (foundCard != null) {
             foundCard.setCardName(cardRequest.getCardName());
             foundCard.setCardNumber(cardRequest.getCardNumber());
             foundCard.setExpiryDate(cardRequest.getExpiryDate());
@@ -49,6 +49,12 @@ public class CardServiceImpl implements CardService{
     @Override
     public List<Card> viewAllCard() {
         return cardRepository.findAll();
+    }
+
+    @Override
+    public Card viewId(String id) {
+        var foundCard =cardRepository.findById(id).orElseThrow(()-> new RegistrationException("invalid card"));
+        return foundCard;
     }
 }
 

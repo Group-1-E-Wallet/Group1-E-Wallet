@@ -7,4 +7,5 @@ public interface CardService {
     String deleteCard(String id);
     String updateCard(String id, CardRequest cardRequest);
     List<Card> viewAllCard();
+    Card viewId(String id);
 }
