@@ -1,10 +1,12 @@
 package com.semicolon.ewallet.user;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.semicolon.ewallet.exception.RegistrationException;
 import com.semicolon.ewallet.kyc.card.CardRequest;
 import com.semicolon.ewallet.kyc.card.CardService;
 import com.semicolon.ewallet.user.dto.*;
 import com.semicolon.ewallet.user.email.EmailSender;
 import com.semicolon.ewallet.user.email.EmailService;
+import com.semicolon.ewallet.user.sendMoney.dto.request.TransferRecipientRequest;
 import com.semicolon.ewallet.user.token.Token;
 import com.semicolon.ewallet.user.token.TokenService;
 import com.squareup.okhttp.*;
@@ -101,7 +103,8 @@ public class UserServiceImpl implements UserService {
 
             }
 
-            private String buildEmail (String firstName, String token){
+
+    private String buildEmail (String firstName, String token){
                 return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                         "\n" +
                         "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -327,7 +330,32 @@ public class UserServiceImpl implements UserService {
                 return response.body().string();
             }
 
+    public Object createTransferRecipient(TransferRecipientRequest transferRecipientRequest) throws IOException {
+                OkHttpClient client = new OkHttpClient();
+        MediaType mediaType = MediaType.parse("application/json");
 
+        JSONObject json = new JSONObject();
+        try {
+            json.put("type", "nuban");
+            json.put("name", transferRecipientRequest.getAccountName());
+            json.put("account_number", transferRecipientRequest.getAccountNumber());
+            json.put("bank_code", transferRecipientRequest.getBankCode());
+            json.put("currency", "NGN" );
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        RequestBody body = RequestBody.create(mediaType, json.toString());
+                Request request = new Request.Builder()
+                        .url("https://api.paystack.co/transferrecipient")
+                        .post(body)
+                        .addHeader("Authorization", "Bearer " + SECRET_KEY)
+                        .addHeader("Content-Type", "application/json")
+                        .build();
+        var response = client.newCall(request).execute().body();
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readTree(response.string());
+    }
 
 
 }
