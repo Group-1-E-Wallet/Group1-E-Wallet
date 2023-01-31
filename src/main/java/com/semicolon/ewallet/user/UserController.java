@@ -1,10 +1,7 @@
 package com.semicolon.ewallet.user;
 import com.semicolon.ewallet.exception.ApiResponse;
 import com.semicolon.ewallet.kyc.card.CardRequest;
-import com.semicolon.ewallet.registration.dto.LoginRequest;
-import com.semicolon.ewallet.registration.dto.SignUpRequest;
 import com.semicolon.ewallet.user.dto.*;
-import com.semicolon.ewallet.user.dto.ResendTokenRequest;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,6 @@ import java.time.ZonedDateTime;
 public class UserController {
     @Autowired
     UserService userService;
-
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest, HttpServletRequest httpServletRequest) throws MessagingException {
         ApiResponse apiResponse = ApiResponse.builder()
@@ -96,4 +92,5 @@ public class UserController {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
 }

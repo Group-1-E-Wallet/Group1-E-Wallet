@@ -17,6 +17,7 @@ public class User {
         private String lastName;
         private String  password;
         private Boolean isVerified;
+
         private String emailAddress;
         @DBRef
         private Kyc kyc;
@@ -27,7 +28,7 @@ public class User {
         private String nin;
         private String address;
         private Card card;
-        public User(String firstName,String lastName,String email,String password){
+        public User(String firstName,String lastName,String emailAddress,String password){
             this.firstName = firstName;
             this.lastName = lastName;
             this.emailAddress = emailAddress;

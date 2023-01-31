@@ -25,6 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService{
     @Autowired
     UserService userService;
     @Autowired
+
     private EmailService emailService;
     @Autowired
     TokenService tokenService;

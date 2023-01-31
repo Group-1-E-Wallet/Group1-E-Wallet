@@ -101,7 +101,7 @@ public class SendMoneyServiceImpl implements SendMoneyService{
             var returnedMapped = mapper.readTree(response.string());
             return mapper.readValue(returnedMapped.toString(), TransferReceiptDeserializedResponse.class).getData();
         }
-//
+
 //        {
 //            ObjectMapper mapper = new ObjectMapper();
 //            return mapper.readTree(response.string());

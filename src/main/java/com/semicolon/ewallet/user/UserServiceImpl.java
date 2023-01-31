@@ -1,8 +1,8 @@
 package com.semicolon.ewallet.user;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.semicolon.ewallet.exception.RegistrationException;
 import com.semicolon.ewallet.kyc.card.CardRequest;
 import com.semicolon.ewallet.kyc.card.CardService;
-import com.semicolon.ewallet.registration.RegistrationService;
 import com.semicolon.ewallet.token.Token;
 import com.semicolon.ewallet.user.dto.*;
 import com.semicolon.ewallet.email.EmailSender;
@@ -37,15 +37,17 @@ public class UserServiceImpl implements UserService {
     TokenService tokenService;
     @Autowired
     CardService cardService;
-//    @Autowired
-//    RegistrationService registrationService;
-
+    @Autowired
+    private EmailService emailService;
+    //To get your secret key secured
     private final String SECRET_KEY = System.getenv("PAYSTACK_SECRET_KEY");
 
             @Override
-            public Optional<User> getByEmailAddress (String emailAddress){
+            public Optional<User> getByEmailAddress (String emailAddress) {
                 return Optional.ofNullable(userRepository.findByEmailAddressIgnoreCase(emailAddress).orElseThrow(() -> new RegistrationException("user does not exist")));
+
             }
+
             @Override
             public String forgotPassword (ForgotPasswordRequest forgotPasswordRequest) throws MessagingException {
                 var foundUser = userRepository.findByEmailAddressIgnoreCase(forgotPasswordRequest
@@ -115,7 +117,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
+        @Override
             public String completeRegistration (CompleteRegistrationRequest completeRegistrationRequest){
                 var user = userRepository.findByEmailAddressIgnoreCase(completeRegistrationRequest
                         .getEmailAddress()).orElseThrow(() -> new RegistrationException("Email Address already exists"));
@@ -183,19 +185,17 @@ public class UserServiceImpl implements UserService {
                 Response response = client.newCall(request).execute();
                 return response.body().string();
             }
-        public String generateToken (User user){
-        SecureRandom random = new SecureRandom();
-        String token = String.valueOf(1000 + random.nextInt(9999));
-        Token confirmationToken = new Token(token,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(10),
-                user
-        );
-        tokenService.saveConfirmationToken(confirmationToken);
-        return confirmationToken.getToken();
-    }
-
-
+            public String generateToken (User user){
+            SecureRandom random = new SecureRandom();
+            String token = String.valueOf(1000 + random.nextInt(9999));
+            Token confirmationToken = new Token(token,
+                    LocalDateTime.now(),
+                    LocalDateTime.now().plusMinutes(10),
+                    user
+            );
+            tokenService.saveConfirmationToken(confirmationToken);
+            return confirmationToken.getToken();
+        }
 
 
 }
