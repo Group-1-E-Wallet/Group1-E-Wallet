@@ -1,8 +1,7 @@
 package com.semicolon.ewallet.user;
-
-import com.semicolon.ewallet.user.card.Card;
 import com.semicolon.ewallet.kyc.Kyc;
 import com.semicolon.ewallet.kyc.NextOfKin;
+import com.semicolon.ewallet.kyc.card.Card;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -28,7 +27,8 @@ public class User {
         private String nin;
         private String address;
         private Card card;
-        public User(String firstName,String lastName,String emailAddress,String password){
+
+        public User(String firstName,String lastName,String email,String password){
             this.firstName = firstName;
             this.lastName = lastName;
             this.emailAddress = emailAddress;

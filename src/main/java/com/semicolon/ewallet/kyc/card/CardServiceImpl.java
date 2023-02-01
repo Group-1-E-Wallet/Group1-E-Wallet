@@ -14,7 +14,7 @@ public class CardServiceImpl implements CardService{
     CardRepository cardRepository;
 
     @Override
-    public com.semicolon.ewallet.user.card.Card addCard(CardRequest cardRequest) {
+    public Card addCard(CardRequest cardRequest) {
         Card card = new Card(
                 cardRequest.getCardName(),
                 cardRequest.getCardNumber(),

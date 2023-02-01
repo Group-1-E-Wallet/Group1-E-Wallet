@@ -1,4 +1,5 @@
 package com.semicolon.ewallet.user;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.semicolon.ewallet.kyc.card.CardRequest;
 import com.semicolon.ewallet.user.dto.*;
 import com.semicolon.ewallet.user.dto.ResendTokenRequest;
@@ -10,9 +11,7 @@ import jakarta.mail.MessagingException;
 import java.io.IOException;
 
 
-public interface UserService{
-
-
+public interface UserService {
     String login(LoginRequest loginRequest);
     String changePassword(ChangePasswordRequest changePasswordRequest);
     SignUpResponse register(SignUpRequest signUpRequest) throws MessagingException;
@@ -27,6 +26,6 @@ public interface UserService{
     void validateBvn(AddAccountRequest addAccountRequest) throws IOException;
     String validateAccount(CardRequest cardRequest) throws IOException;
     String resendToken(ResendTokenRequest resendTokenRequest) throws MessagingException;
-
+//    JsonNode createTransferRecipient(TransferRecipientRequest transferRecipientRequest) throws IOException;
 
 }

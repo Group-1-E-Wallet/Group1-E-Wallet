@@ -2,7 +2,6 @@ package com.semicolon.ewallet.user.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class EmailService implements EmailSender{
-
     @Autowired
     private JavaMailSender  javaMailSender;
     @Async
