@@ -12,14 +12,14 @@ public interface UserService{
 
 
     String changePassword(ChangePasswordRequest changePasswordRequest);
-    User getUser(User user);
+    void getUser(User user);
    Optional<User> getByEmailAddress(String emailAddress);
     String forgotPassword(ForgotPasswordRequest forgotPasswordRequest) throws MessagingException;
     String resetPassword(ResetPasswordRequest resetPasswordRequest);
     void enableUser(String email);
-     String completeRegistration(CompleteRegistrationRequest completeRegistrationRequest);
+     String completeRegistration(CompleteRegistrationRequest completeRegistrationRequest) throws IOException;
+    String validateAccount (CardRequest cardRequest)throws IOException;
     void validateBvn(AddAccountRequest addAccountRequest) throws IOException;
-    String validateAccount(CardRequest cardRequest) throws IOException;
     String generateToken (User user);
 
 

@@ -4,6 +4,7 @@ import com.semicolon.ewallet.kyc.card.CardRequest;
 import com.semicolon.ewallet.user.dto.*;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.time.ZonedDateTime;
 public class UserController {
     @Autowired
     UserService userService;
+
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest, HttpServletRequest httpServletRequest) throws MessagingException {
         ApiResponse apiResponse = ApiResponse.builder()
@@ -53,7 +55,8 @@ public class UserController {
     }
     @PostMapping("/update-register")
     public ResponseEntity<?> completeRegistration(@RequestBody CompleteRegistrationRequest completeRegistrationRequest,
-                                                  HttpServletRequest httpServletRequest){
+                                                  HttpServletRequest httpServletRequest) throws IOException{
+
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .data(userService.completeRegistration(completeRegistrationRequest))
@@ -66,7 +69,8 @@ public class UserController {
 
     @GetMapping("/validateAccount")
     public ResponseEntity<?> accountValidation(@RequestBody CardRequest cardDetailsRequest,
-                                               HttpServletRequest httpServletRequest) throws IOException {
+                                               HttpServletRequest httpServletRequest) throws IOException{
+
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -75,7 +79,8 @@ public class UserController {
                 .path(httpServletRequest.getRequestURI())
                 .isSuccessful(true)
                 .build();
-        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @PostMapping("/bvnMatch")

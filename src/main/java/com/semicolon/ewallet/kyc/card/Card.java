@@ -1,7 +1,11 @@
 package com.semicolon.ewallet.kyc.card;
+
+
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+
 
 @Document
 @Data

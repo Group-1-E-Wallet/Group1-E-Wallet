@@ -43,12 +43,6 @@ public class UserServiceImpl implements UserService {
     private final String SECRET_KEY = System.getenv("PAYSTACK_SECRET_KEY");
 
             @Override
-            public Optional<User> getByEmailAddress (String emailAddress) {
-                return Optional.ofNullable(userRepository.findByEmailAddressIgnoreCase(emailAddress).orElseThrow(() -> new RegistrationException("user does not exist")));
-
-            }
-
-            @Override
             public String forgotPassword (ForgotPasswordRequest forgotPasswordRequest) throws MessagingException {
                 var foundUser = userRepository.findByEmailAddressIgnoreCase(forgotPasswordRequest
                         .getEmail());
@@ -112,13 +106,19 @@ public class UserServiceImpl implements UserService {
                 return "password updated";
             }
 
-    @Override
-    public User getUser(User user) {
-        return userRepository.save(user);
-    }
 
         @Override
-            public String completeRegistration (CompleteRegistrationRequest completeRegistrationRequest){
+        public void getUser(User user) {
+            userRepository.save(user);
+        }
+
+    @Override
+    public Optional<User> getByEmailAddress(String emailAddress){
+        return Optional.ofNullable(userRepository.findByEmailAddressIgnoreCase(emailAddress).orElseThrow(()-> new RegistrationException("user does not exist")));
+    }
+
+    @Override
+            public String completeRegistration (CompleteRegistrationRequest completeRegistrationRequest) throws IOException{
                 var user = userRepository.findByEmailAddressIgnoreCase(completeRegistrationRequest
                         .getEmailAddress()).orElseThrow(() -> new RegistrationException("Email Address already exists"));
 
@@ -196,6 +196,4 @@ public class UserServiceImpl implements UserService {
             tokenService.saveConfirmationToken(confirmationToken);
             return confirmationToken.getToken();
         }
-
-
 }

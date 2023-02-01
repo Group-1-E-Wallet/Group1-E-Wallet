@@ -1,5 +1,8 @@
 package com.semicolon.ewallet.registration.dto;
 
+
+import lombok.AllArgsConstructor;
+
 import lombok.Data;
 
 @Data
