@@ -1,10 +1,9 @@
-package com.semicolon.ewallet.user.dto;
+package com.semicolon.ewallet.registration.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class SignUpResponse {
     String firstName;
     String lastName;

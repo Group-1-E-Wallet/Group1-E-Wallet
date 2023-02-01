@@ -9,12 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
-
-
-
-
-
 @Service
 @Slf4j
 public class CardServiceImpl implements CardService{
@@ -86,11 +80,9 @@ try{
         return cardRepository.findAll();
     }
 
-    @Override
-    public Optional<Card> findById(String id){
-        var foundCard=cardRepository.findById(id);
-        if(!foundCard.isPresent()) throw new IllegalStateException("Card not found");
-        return foundCard;
+   @Override
+    public Card viewId(String id) {
+        return cardRepository.findById(id).orElseThrow(()-> new RegistrationException("invalid card"));
     }
 
 

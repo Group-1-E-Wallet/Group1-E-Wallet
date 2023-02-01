@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.user.token;
+package com.semicolon.ewallet.token;
 
 import lombok.Data;
 
