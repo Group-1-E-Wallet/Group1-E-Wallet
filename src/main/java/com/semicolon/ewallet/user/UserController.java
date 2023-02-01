@@ -18,6 +18,8 @@ import java.time.ZonedDateTime;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest, HttpServletRequest httpServletRequest) throws MessagingException {
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -54,6 +56,7 @@ public class UserController {
     @PostMapping("/update-register")
     public ResponseEntity<?> completeRegistration(@RequestBody CompleteRegistrationRequest completeRegistrationRequest,
                                                   HttpServletRequest httpServletRequest) throws IOException{
+
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .data(userService.completeRegistration(completeRegistrationRequest))
@@ -68,6 +71,7 @@ public class UserController {
     public ResponseEntity<?> accountValidation(@RequestBody CardRequest cardDetailsRequest,
                                                HttpServletRequest httpServletRequest) throws IOException{
 
+
         ApiResponse apiResponse = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .data(userService.validateAccount(cardDetailsRequest))
@@ -75,8 +79,8 @@ public class UserController {
                 .path(httpServletRequest.getRequestURI())
                 .isSuccessful(true)
                 .build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
 
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @PostMapping("/bvnMatch")

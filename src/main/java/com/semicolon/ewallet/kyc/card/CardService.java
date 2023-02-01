@@ -12,5 +12,6 @@ public interface CardService {
     String updateCard(String id,CardRequest cardRequest);
     List<Card> viewAllCard();
     String validateAccount(CardRequest cardRequest) throws IOException;
+
     Card viewId(String id);
 }

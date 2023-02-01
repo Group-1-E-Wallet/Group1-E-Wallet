@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+
 @Service
 @Slf4j
 public class CardServiceImpl implements CardService{
@@ -81,6 +82,7 @@ try{
     }
 
    @Override
+
     public Card viewId(String id) {
         return cardRepository.findById(id).orElseThrow(()-> new RegistrationException("invalid card"));
     }

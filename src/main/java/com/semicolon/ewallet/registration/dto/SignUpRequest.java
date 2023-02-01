@@ -1,10 +1,13 @@
 package com.semicolon.ewallet.registration.dto;
 
+
 import jakarta.validation.constraints.*;
+
 import lombok.Data;
 
 @Data
 public class SignUpRequest {
+
     @NotBlank(message="field cannot be empty")
     private String firstName;
     @NotBlank(message="field cannot be empty")

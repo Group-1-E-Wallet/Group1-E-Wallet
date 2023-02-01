@@ -10,4 +10,5 @@ public class ChangePasswordRequest {
     private String confirmNewPassword;
     private String id;
     private String password;
+
 }

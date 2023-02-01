@@ -1,4 +1,5 @@
 package com.semicolon.ewallet.user;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.semicolon.ewallet.exception.RegistrationException;
 import com.semicolon.ewallet.kyc.card.CardRequest;
 import com.semicolon.ewallet.kyc.card.CardService;
@@ -104,6 +105,7 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(user);
                 return "password updated";
             }
+
 
         @Override
         public void getUser(User user) {
