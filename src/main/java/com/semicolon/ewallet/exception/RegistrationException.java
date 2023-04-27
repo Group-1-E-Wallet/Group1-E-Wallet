@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.exception;
+package com.semicolon.ewallet.Exception;
 
 public class RegistrationException extends RuntimeException{
 

@@ -1,4 +1,4 @@
-package com.semicolon.ewallet.user.dto;
+package com.semicolon.ewallet.registration.dto;
 
 import lombok.Data;
 
