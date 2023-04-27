@@ -34,6 +34,7 @@ public class GlobalExceptionHandler{
                 .path(httpServletRequest.getRequestURI())
                 .data(accountException.getMessage())
                 .build();
+
         return new ResponseEntity<>(apiResponse, HttpStatus.CONFLICT);
     }
 
